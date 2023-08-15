@@ -1,6 +1,33 @@
 plugins {
     id 'com.android.library'
     id 'com.github.dcendents.android-maven'
+    id 'maven-publish'
+}
+
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release         // 表示发布 release（jitpack 都不会使用到）
+                groupId = 'com.tools' // 这个是依赖库的组 id
+                artifactId = 'ToolsLibrary'       // 依赖库的名称（jitpack 都不会使用到）
+                version = "1.0"                //当前版本依赖库版本号，这个jitpack不会使用到，只是我们开发者自己查看
+            }
+        }
+        repositories {
+            maven {
+                def baseUrl = buildDir.getParent()
+                def releasesRepoUrl = "$baseUrl/repos/releases"
+                def snapshotsRepoUrl = "$baseUrl/repos/snapshots"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            }
+        }
+    }
 }
 
 android {
