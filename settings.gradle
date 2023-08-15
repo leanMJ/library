@@ -1,3 +1,2 @@
 rootProject.name = "widgetLib"
-include ':app',':widget'
-include ':tools'
+include ':app',':widget',':tools'
