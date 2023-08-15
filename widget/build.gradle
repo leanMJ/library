@@ -8,11 +8,11 @@ plugins {
 //    classifier 'sources'
 //}
 android {
-    compileSdkVersion 33
+    compileSdkVersion 29
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
