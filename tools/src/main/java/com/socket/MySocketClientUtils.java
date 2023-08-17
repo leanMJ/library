@@ -137,6 +137,7 @@ public class MySocketClientUtils {
         if (client == null) {
             return;
         }
+           try {
         if (!client.isOpen()) {
             if (client.getReadyState().name().equals(WebSocket.READYSTATE.NOT_YET_CONNECTED.name())) {
                 try {
@@ -210,6 +211,11 @@ public class MySocketClientUtils {
                 }
             }
         }
+         } catch (Exception e) {
+                    if (IS_SHOW_LOG) {
+                        Log.d("TAG", "webSocket 连接错误 --- " + e.toString());
+                    }
+                }
     }
 
     /**
