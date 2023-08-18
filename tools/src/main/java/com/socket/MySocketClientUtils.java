@@ -157,8 +157,14 @@ public class MySocketClientUtils {
                                     if (client == null) {
                                         return;
                                     }
-                                    client.connectBlocking();
+                                    if (!client.isOpen()) {
+                                        client.connectBlocking();
+                                    }
+                                } catch (IllegalStateException e) {
+                                    e.printStackTrace();
                                 } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                             }
