@@ -161,7 +161,20 @@ public class MySocketClientUtils {
                 isReConnect = true;
                 Log.d(TAG, client.getReadyState().name());
                 if (!client.isOpen()) {
-                    String readyStateName = client.getReadyState().name();
+                    ReadyState readyState=   client.getReadyState();
+                    if(null==readyState){
+                        if (IS_SHOW_LOG) {
+                            Log.d(TAG, "readyState isNull");
+                        }
+                        return;
+                    }
+                    String readyStateName = readyState.name();
+                    if(null==readyStateName){
+                        if (IS_SHOW_LOG) {
+                            Log.d(TAG, "readyStateName isNull");
+                        }
+                        return;
+                    }
                     if (readyStateName.equals(ReadyState.NOT_YET_CONNECTED.name())) {
                         if (client == null) {
                             return;
