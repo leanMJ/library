@@ -143,45 +143,46 @@ public class MySocketClientUtils {
         if (client == null) {
             return;
         }
-        try {
-            if (!client.isOpen()) {
-                if (client.getReadyState().name().equals(ReadyState.NOT_YET_CONNECTED.name())) {
-                    try {
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                if (IS_SHOW_LOG) {
-                                    Log.d(TAG, "开启连接");
-                                }
-                                try {
-                                    if (client == null) {
-                                        return;
-                                    }
-                                    if (!client.isOpen()) {
-                                        client.connectBlocking();
-                                    }
-                                } catch (IllegalStateException e) {
-                                    e.printStackTrace();
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }.start();
-
-                    } catch (IllegalStateException e) {
-                        if (IS_SHOW_LOG) {
-                            Log.d("TAG", "webSocket 连接错误 --- " + e);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (client == null) {
+                    return;
+                }
+                if (!client.isOpen()) {
+                    if (client.getReadyState().name().equals(ReadyState.NOT_YET_CONNECTED.name())) {
+                        if (client == null) {
+                            return;
                         }
-                    }
+                        if (IS_SHOW_LOG) {
+                            Log.d(TAG, "开启连接");
+                        }
+                        closeConnect();
+                        initSocketClient();
+//                        try {
+//                              client.connectBlocking();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//
+                    } else if (client.getReadyState().name().equals(ReadyState.CLOSING.name())
+                            || client.getReadyState().name().equals(ReadyState.CLOSED.name())) {
+                        if (client == null) {
+                            return;
+                        }
+                        if (IS_SHOW_LOG) {
+                            Log.d(TAG, "开启重连连接");
+                        }
+                        closeConnect();
+                        initSocketClient();
+//                        try {
+//                            client.reconnectBlocking();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
 
-                } else if (client.getReadyState().name().equals(ReadyState.CLOSING.name())
-                        || client.getReadyState().name().equals(ReadyState.CLOSED.name())) {
-
-                    new Thread() {
-                        @Override
-                        public void run() {
+                    } else {
+                        try {
                             if (client == null) {
                                 return;
                             }
@@ -190,45 +191,107 @@ public class MySocketClientUtils {
                             }
                             closeConnect();
                             initSocketClient();
-//                        try {
-//                            client.reconnectBlocking();
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-                        }
-                    }.start();
-
-                } else {
-                    try {
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                if (IS_SHOW_LOG) {
-                                    Log.d(TAG, "开启重连连接");
-                                }
-                                closeConnect();
-                                initSocketClient();
 //                            try {
 //                                client.connectBlocking();
 //                            } catch (InterruptedException e) {
 //                                e.printStackTrace();
 //                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            if (IS_SHOW_LOG) {
+                                Log.d("TAG", "webSocket 连接错误 --- " + e.toString());
                             }
-                        }.start();
-                    } catch (IllegalStateException e) {
-                        e.printStackTrace();
-                        if (IS_SHOW_LOG) {
-                            Log.d("TAG", "webSocket 连接错误 --- " + e.toString());
                         }
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (IS_SHOW_LOG) {
-                Log.d("TAG", "webSocket 连接错误 --- " + e.toString());
-            }
-        }
+        }).start();
+//        try {
+//            if (!client.isOpen()) {
+//                if (client.getReadyState().name().equals(ReadyState.NOT_YET_CONNECTED.name())) {
+//                    try {
+//                        new Thread() {
+//                            @Override
+//                            public void run() {
+//                                if (IS_SHOW_LOG) {
+//                                    Log.d(TAG, "开启连接");
+//                                }
+//                                try {
+//                                    if (client == null) {
+//                                        return;
+//                                    }
+//                                    if (!client.isOpen()) {
+//                                        client.connectBlocking();
+//                                    }
+//                                } catch (IllegalStateException e) {
+//                                    e.printStackTrace();
+//                                } catch (InterruptedException e) {
+//                                    e.printStackTrace();
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }.start();
+//
+//                    } catch (IllegalStateException e) {
+//                        if (IS_SHOW_LOG) {
+//                            Log.d("TAG", "webSocket 连接错误 --- " + e);
+//                        }
+//                    }
+//
+//                } else if (client.getReadyState().name().equals(ReadyState.CLOSING.name())
+//                        || client.getReadyState().name().equals(ReadyState.CLOSED.name())) {
+//
+//                    new Thread() {
+//                        @Override
+//                        public void run() {
+//                            if (client == null) {
+//                                return;
+//                            }
+//                            if (IS_SHOW_LOG) {
+//                                Log.d(TAG, "开启重连连接");
+//                            }
+//                            closeConnect();
+//                            initSocketClient();
+////                        try {
+////                            client.reconnectBlocking();
+////                        } catch (InterruptedException e) {
+////                            e.printStackTrace();
+////                        }
+//                        }
+//                    }.start();
+//
+//                } else {
+//                    try {
+//                        new Thread() {
+//                            @Override
+//                            public void run() {
+//                                if (IS_SHOW_LOG) {
+//                                    Log.d(TAG, "开启重连连接");
+//                                }
+//                                closeConnect();
+//                                initSocketClient();
+////                            try {
+////                                client.connectBlocking();
+////                            } catch (InterruptedException e) {
+////                                e.printStackTrace();
+////                            }
+//                            }
+//                        }.start();
+//                    } catch (IllegalStateException e) {
+//                        e.printStackTrace();
+//                        if (IS_SHOW_LOG) {
+//                            Log.d("TAG", "webSocket 连接错误 --- " + e.toString());
+//                        }
+//                    }
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            if (IS_SHOW_LOG) {
+//                Log.d("TAG", "webSocket 连接错误 --- " + e.toString());
+//            }
+//        }
     }
 
     /**
