@@ -17,7 +17,7 @@ public class MySocketClientUtils {
     public MyWebSocketClient client;
     private static final long CLOSE_RECON_TIME = 3 * 1000;//连接断开或者连接错误立即重连
     private static MySocketClientUtils INSTANCE;
-    private final boolean IS_SHOW_LOG = false;
+    private  boolean IS_SHOW_LOG = false;
     private URI uri;
 
     public static MySocketClientUtils getInstance() {
@@ -31,6 +31,10 @@ public class MySocketClientUtils {
     }
 
     MySocketClientUtils() {
+    }
+
+    public void setShowLog(boolean isShow) {
+        this.IS_SHOW_LOG = isShow;
     }
 
     public void setUri(URI uri) {
