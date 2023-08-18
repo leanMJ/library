@@ -81,6 +81,7 @@ public class MySocketClientUtils {
                     Log.d(TAG, "onClose() 连接断开_reason：" + reason + isNeedReConnect);
                 }
                 isConnect = false;
+                isReConnect = false;
                 if (isNeedReConnect) {
                     mHandler.postDelayed(heartBeatRunnable, CLOSE_RECON_TIME);//开启心跳检测
                 } else {
@@ -95,6 +96,7 @@ public class MySocketClientUtils {
                     Log.d(TAG, "onError() 连接出错：" + ex.getMessage());
                 }
                 isConnect = false;
+                isReConnect = false;
                 mHandler.removeCallbacks(heartBeatRunnable);
                 mHandler.postDelayed(heartBeatRunnable, CLOSE_RECON_TIME);//开启心跳检测
             }
