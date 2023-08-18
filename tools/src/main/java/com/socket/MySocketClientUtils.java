@@ -189,6 +189,8 @@ public class MySocketClientUtils {
                                 if (!client.isOpen()) {
                                     client.connectBlocking();
                                 }
+                            } catch (IllegalStateException e) {
+                                e.printStackTrace();
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
