@@ -158,6 +158,7 @@ public class MySocketClientUtils {
                 if (client == null) {
                     return;
                 }
+                isReConnect = true;
                 Log.d(TAG, client.getReadyState().name());
                 if (!client.isOpen()) {
                     String readyStateName = client.getReadyState().name();
@@ -216,7 +217,6 @@ public class MySocketClientUtils {
                     }
                 }
                 try {
-                    isReConnect = true;
                     Thread.sleep(5000);
                 } catch (InterruptedException exception) {
                     isReConnect = false;
