@@ -141,7 +141,6 @@ public class MySocketClientUtils {
         }
     }
 
-
     /**
      * 连接WebSocket
      */
@@ -159,75 +158,9 @@ public class MySocketClientUtils {
                     return;
                 }
                 isReConnect = true;
-                Log.d(TAG, client.getReadyState().name());
                 if (!client.isOpen()) {
-                    ReadyState readyState=   client.getReadyState();
-                    if(null==readyState){
-                        if (IS_SHOW_LOG) {
-                            Log.d(TAG, "readyState isNull");
-                        }
-                        return;
-                    }
-                    String readyStateName = readyState.name();
-                    if(null==readyStateName){
-                        if (IS_SHOW_LOG) {
-                            Log.d(TAG, "readyStateName isNull");
-                        }
-                        return;
-                    }
-                    if (readyStateName.equals(ReadyState.NOT_YET_CONNECTED.name())) {
-                        if (client == null) {
-                            return;
-                        }
-                        if (IS_SHOW_LOG) {
-                            Log.d(TAG, "开启连接");
-                        }
-//                        closeConnect();
-//                        initSocketClient();
-                        try {
-                            client.connectBlocking();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-//
-                    } else if (readyStateName.equals(ReadyState.CLOSING.name())
-                            || readyStateName.equals(ReadyState.CLOSED.name())) {
-                        if (client == null) {
-                            return;
-                        }
-                        if (IS_SHOW_LOG) {
-                            Log.d(TAG, "开启重连连接");
-                        }
-                        closeConnect();
-                        initSocketClient();
-//                        try {
-//                            client.reconnectBlocking();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-
-                    } else {
-                        try {
-                            if (client == null) {
-                                return;
-                            }
-                            if (IS_SHOW_LOG) {
-                                Log.d(TAG, "开启重连连接");
-                            }
-                            closeConnect();
-                            initSocketClient();
-//                            try {
-//                                client.connectBlocking();
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            if (IS_SHOW_LOG) {
-                                Log.d("TAG", "webSocket 连接错误 --- " + e.toString());
-                            }
-                        }
-                    }
+                    closeConnect();
+                    initSocketClient();
                 }
                 try {
                     Thread.sleep(5000);
@@ -239,6 +172,104 @@ public class MySocketClientUtils {
             }
         }).start();
     }
+
+//    /**
+//     * 连接WebSocket
+//     */
+//    private void connect() {
+//        if (client == null) {
+//            return;
+//        }
+//        if (isReConnect) {
+//            return;
+//        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (client == null) {
+//                    return;
+//                }
+//                isReConnect = true;
+//                Log.d(TAG, client.getReadyState().name());
+//                if (!client.isOpen()) {
+//                    ReadyState readyState=   client.getReadyState();
+//                    if(null==readyState){
+//                        if (IS_SHOW_LOG) {
+//                            Log.d(TAG, "readyState isNull");
+//                        }
+//                        return;
+//                    }
+//                    String readyStateName = readyState.name();
+//                    if(null==readyStateName){
+//                        if (IS_SHOW_LOG) {
+//                            Log.d(TAG, "readyStateName isNull");
+//                        }
+//                        return;
+//                    }
+//                    if (readyStateName.equals(ReadyState.NOT_YET_CONNECTED.name())) {
+//                        if (client == null) {
+//                            return;
+//                        }
+//                        if (IS_SHOW_LOG) {
+//                            Log.d(TAG, "开启连接");
+//                        }
+////                        closeConnect();
+////                        initSocketClient();
+//                        try {
+//                            client.connectBlocking();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+////
+//                    } else if (readyStateName.equals(ReadyState.CLOSING.name())
+//                            || readyStateName.equals(ReadyState.CLOSED.name())) {
+//                        if (client == null) {
+//                            return;
+//                        }
+//                        if (IS_SHOW_LOG) {
+//                            Log.d(TAG, "开启重连连接");
+//                        }
+//                        closeConnect();
+//                        initSocketClient();
+////                        try {
+////                            client.reconnectBlocking();
+////                        } catch (Exception e) {
+////                            e.printStackTrace();
+////                        }
+//
+//                    } else {
+//                        try {
+//                            if (client == null) {
+//                                return;
+//                            }
+//                            if (IS_SHOW_LOG) {
+//                                Log.d(TAG, "开启重连连接");
+//                            }
+//                            closeConnect();
+//                            initSocketClient();
+////                            try {
+////                                client.connectBlocking();
+////                            } catch (InterruptedException e) {
+////                                e.printStackTrace();
+////                            }
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                            if (IS_SHOW_LOG) {
+//                                Log.d("TAG", "webSocket 连接错误 --- " + e.toString());
+//                            }
+//                        }
+//                    }
+//                }
+//                try {
+//                    Thread.sleep(5000);
+//                } catch (InterruptedException exception) {
+//                    isReConnect = false;
+//                    exception.printStackTrace();
+//                }
+//                isReConnect = false;
+//            }
+//        }).start();
+//    }
 
     /**
      * 断开连接
