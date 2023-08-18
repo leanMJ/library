@@ -17,7 +17,8 @@ public class MySocketClientUtils {
     public MyWebSocketClient client;
     private static final long CLOSE_RECON_TIME = 3 * 1000;//连接断开或者连接错误立即重连
     private static MySocketClientUtils INSTANCE;
-    private  boolean IS_SHOW_LOG = false;
+    private boolean isReConnect;
+    private boolean IS_SHOW_LOG = false;
     private URI uri;
 
     public static MySocketClientUtils getInstance() {
@@ -140,11 +141,15 @@ public class MySocketClientUtils {
         }
     }
 
+
     /**
      * 连接WebSocket
      */
     private void connect() {
         if (client == null) {
+            return;
+        }
+        if (isReConnect) {
             return;
         }
         new Thread(new Runnable() {
@@ -153,24 +158,26 @@ public class MySocketClientUtils {
                 if (client == null) {
                     return;
                 }
+                Log.d(TAG, client.getReadyState().name());
                 if (!client.isOpen()) {
-                    if (client.getReadyState().name().equals(ReadyState.NOT_YET_CONNECTED.name())) {
+                    String readyStateName = client.getReadyState().name();
+                    if (readyStateName.equals(ReadyState.NOT_YET_CONNECTED.name())) {
                         if (client == null) {
                             return;
                         }
                         if (IS_SHOW_LOG) {
                             Log.d(TAG, "开启连接");
                         }
-                        closeConnect();
-                        initSocketClient();
-//                        try {
-//                              client.connectBlocking();
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
+//                        closeConnect();
+//                        initSocketClient();
+                        try {
+                            client.connectBlocking();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 //
-                    } else if (client.getReadyState().name().equals(ReadyState.CLOSING.name())
-                            || client.getReadyState().name().equals(ReadyState.CLOSED.name())) {
+                    } else if (readyStateName.equals(ReadyState.CLOSING.name())
+                            || readyStateName.equals(ReadyState.CLOSED.name())) {
                         if (client == null) {
                             return;
                         }
@@ -208,6 +215,14 @@ public class MySocketClientUtils {
                         }
                     }
                 }
+                try {
+                    isReConnect = true;
+                    Thread.sleep(5000);
+                } catch (InterruptedException exception) {
+                    isReConnect = false;
+                    exception.printStackTrace();
+                }
+                isReConnect = false;
             }
         }).start();
 //        try {
