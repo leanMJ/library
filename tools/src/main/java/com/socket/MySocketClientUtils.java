@@ -13,7 +13,6 @@ import java.util.concurrent.Executors;
 
 
 public class MySocketClientUtils {
-    public boolean isNeedReConnect;
     private final static String TAG = MySocketClientUtils.class.getSimpleName();
     public volatile boolean isConnect;
     public MyWebSocketClient client;
@@ -75,21 +74,19 @@ public class MySocketClientUtils {
                     Log.d(TAG, "WebSocket------ 连接成功");
                 }
                 isConnect = true;
+                mHandler.removeCallbacks(heartBeatRunnable);
                 mHandler.postDelayed(heartBeatRunnable, HEART_BEAT_RATE);//开启心跳检测
             }
 
             @Override
             public void onClose(int code, String reason, boolean remote) {//在连接断开时调用
                 if (IS_SHOW_LOG) {
-                    Log.d(TAG, "onClose() 连接断开_reason：" + reason + isNeedReConnect);
+                    Log.d(TAG, "onClose() 连接断开_reason：" + reason);
                 }
                 isConnect = false;
                 isReConnect = false;
-                if (isNeedReConnect) {
-                    mHandler.postDelayed(heartBeatRunnable, CLOSE_RECON_TIME);//开启心跳检测
-                } else {
-                    mHandler.removeCallbacks(heartBeatRunnable);
-                }
+                mHandler.removeCallbacks(heartBeatRunnable);
+                mHandler.postDelayed(heartBeatRunnable, CLOSE_RECON_TIME);//开启心跳检测
             }
 
             @Override
@@ -208,7 +205,7 @@ public class MySocketClientUtils {
                                 return;
                             }
                             if (IS_SHOW_LOG) {
-                                Log.d(TAG, "开启重连连接");
+                                Log.d(TAG, "断开重连");
                             }
                             closeConnect();
                             initSocketClient();
@@ -224,7 +221,7 @@ public class MySocketClientUtils {
                                     return;
                                 }
                                 if (IS_SHOW_LOG) {
-                                    Log.d(TAG, "开启重连连接");
+                                    Log.d(TAG, "断开重连");
                                 }
                                 closeConnect();
                                 initSocketClient();
@@ -315,7 +312,9 @@ public class MySocketClientUtils {
      * 开启重连
      */
     public void reconnectWs() {
-        mHandler.removeCallbacks(heartBeatRunnable);
-        connect();
+        closeConnect();
+        initSocketClient();
+//        mHandler.removeCallbacks(heartBeatRunnable);
+//        connect();
     }
 }
