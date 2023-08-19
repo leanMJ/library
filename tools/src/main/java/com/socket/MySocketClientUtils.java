@@ -176,7 +176,9 @@ public class MySocketClientUtils {
                         return;
                     }
                     isReConnect = true;
+                    if (IS_SHOW_LOG) {
                     Log.d(TAG, client.getReadyState().name());
+                    }
                     if (!client.isOpen()) {
                         ReadyState readyState = client.getReadyState();
                         if (null == readyState) {
