@@ -19,6 +19,7 @@ public class MySocketClientUtils {
     private static final long CLOSE_RECON_TIME = 3 * 1000;//连接断开或者连接错误立即重连
     private static MySocketClientUtils INSTANCE;
     private boolean isReConnect;
+    public boolean isNeedReConnect;
     private boolean IS_SHOW_LOG = false;
     private URI uri;
     private ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
@@ -88,8 +89,11 @@ public class MySocketClientUtils {
                 }
                 isConnect = false;
                 isReConnect = false;
-                mHandler.removeCallbacks(heartBeatRunnable);
-                mHandler.postDelayed(heartBeatRunnable, CLOSE_RECON_TIME);//开启心跳检测
+                if (isNeedReConnect) {
+                    mHandler.postDelayed(heartBeatRunnable, CLOSE_RECON_TIME);//开启心跳检测
+                } else {
+                    mHandler.removeCallbacks(heartBeatRunnable);
+                }
             }
 
             @Override
