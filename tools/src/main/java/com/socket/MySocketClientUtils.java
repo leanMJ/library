@@ -149,7 +149,6 @@ public class MySocketClientUtils {
      */
     private void connect() {
         if (client == null) {
-            initSocketClient();
             return;
         }
         if (isReConnect) {
