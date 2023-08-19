@@ -149,6 +149,7 @@ public class MySocketClientUtils {
      */
     private void connect() {
         if (client == null) {
+            initSocketClient();
             return;
         }
         if (isReConnect) {
@@ -272,7 +273,7 @@ public class MySocketClientUtils {
     }
 
     //    -------------------------------------WebSocket心跳检测------------------------------------------------
-    private static final long HEART_BEAT_RATE = 20 * 1000;//每隔10秒进行一次对长连接的心跳检测
+    private static final long HEART_BEAT_RATE = 10 * 1000;//每隔10秒进行一次对长连接的心跳检测
     private Handler mHandler = new Handler();
     private Runnable heartBeatRunnable = new Runnable() {
         @Override
