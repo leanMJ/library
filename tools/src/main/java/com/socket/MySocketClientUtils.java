@@ -47,7 +47,7 @@ public class MySocketClientUtils {
 
     //初始化WebSocket
     public void initSocketClient() {
-        if (client.isOpen()) {
+        if (null != client && client.isOpen()) {
             return;
         }
         client = null;
