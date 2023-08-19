@@ -48,10 +48,16 @@ public class MySocketClientUtils {
     //初始化WebSocket
     public void initSocketClient() {
         if (null != client && client.isOpen()) {
+            if (IS_SHOW_LOG) {
+                Log.d(TAG, "client isOpen");
+            }
             return;
         }
         client = null;
         if (null == uri) {
+            if (IS_SHOW_LOG) {
+                Log.d(TAG, "uri isNull");
+            }
             return;
         }
         client = new MyWebSocketClient(uri) {
@@ -60,7 +66,7 @@ public class MySocketClientUtils {
             public void onMessage(ByteBuffer bytes) {
                 super.onMessage(bytes);
                 if (IS_SHOW_LOG) {
-                    Log.d(TAG, "WebSocketService收到的消息ByteBuffer" + bytes.toString());
+                    Log.d(TAG, "收到的消息ByteBuffer" + bytes.toString());
                 }
             }
 
@@ -68,7 +74,7 @@ public class MySocketClientUtils {
             public void onMessage(String message) {
                 //message就是接收到的消息
                 if (IS_SHOW_LOG) {
-                    Log.d(TAG, "WebSocketService收到的消息" + message);
+                    Log.d(TAG, "收到的消息" + message);
                 }
             }
 
