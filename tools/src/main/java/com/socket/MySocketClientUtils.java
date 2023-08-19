@@ -8,6 +8,8 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class MySocketClientUtils {
@@ -20,6 +22,7 @@ public class MySocketClientUtils {
     private boolean isReConnect;
     private boolean IS_SHOW_LOG = false;
     private URI uri;
+    private ExecutorService singleThreadExecutor = Executors.newSingleThreadExecutor();
 
     public static MySocketClientUtils getInstance() {
         if (INSTANCE == null) {
@@ -156,7 +159,8 @@ public class MySocketClientUtils {
             return;
         }
         try {
-            new Thread(new Runnable() {
+            singleThreadExecutor.execute(new Runnable() {
+
                 @Override
                 public void run() {
                     if (client == null) {
@@ -245,7 +249,8 @@ public class MySocketClientUtils {
                     }
                     isReConnect = false;
                 }
-            }).start();
+            });
+
         } catch (Exception e) {
             e.printStackTrace();
             if (IS_SHOW_LOG) {
