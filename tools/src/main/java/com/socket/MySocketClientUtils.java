@@ -15,7 +15,7 @@ import java.util.concurrent.Executors;
 public class MySocketClientUtils {
     private final static String TAG = MySocketClientUtils.class.getSimpleName();
     public volatile boolean isConnect;
-    public MyWebSocketClient client;
+    public volatile MyWebSocketClient client;
     private static final long CLOSE_RECON_TIME = 3 * 1000;//连接断开或者连接错误立即重连
     private static MySocketClientUtils INSTANCE;
     private boolean isReConnect;
@@ -179,7 +179,7 @@ public class MySocketClientUtils {
                     if (IS_SHOW_LOG) {
                     Log.d(TAG, client.getReadyState().name());
                     }
-                    if (!client.isOpen()) {
+                    if (null!=client&&!client.isOpen()) {
                         ReadyState readyState = client.getReadyState();
                         if (null == readyState) {
                             if (IS_SHOW_LOG) {
